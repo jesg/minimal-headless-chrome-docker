@@ -1,10 +1,16 @@
 var http = require('http'),
     httpProxy = require('http-proxy');
 
+var httpAgent = http.globalAgent
+httpAgent.maxSockets = 10000;
+httpAgent.keepAlive = true;
+
 //
 // Create a proxy server with custom application logic
 //
-var proxy = httpProxy.createProxyServer({});
+var proxy = httpProxy.createProxyServer({
+  agent: httpAgent
+});
 
 //
 // Create your custom server and just call `proxy.web()` to proxy
