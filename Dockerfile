@@ -1,11 +1,4 @@
-FROM ubuntu:16.04
-
-#================================================
-# Customize sources for apt-get
-#================================================
-RUN  echo "deb http://archive.ubuntu.com/ubuntu xenial main universe\n" > /etc/apt/sources.list \
-  && echo "deb http://archive.ubuntu.com/ubuntu xenial-updates main universe\n" >> /etc/apt/sources.list \
-  && echo "deb http://security.ubuntu.com/ubuntu xenial-security main universe\n" >> /etc/apt/sources.list
+FROM node:8.5.0-slim
 
 # No interactive frontend during docker build
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -24,8 +17,6 @@ RUN apt-get -qqy update \
     unzip \
     wget \
     locales \
-    nodejs \
-    npm \
   && rm -rf /var/lib/apt/lists/* /var/cache/apt/* \
 
 #===================
@@ -72,9 +63,9 @@ RUN wget --no-verbose -O /tmp/chromedriver_linux64.zip https://chromedriver.stor
 && sudo ln -fs /opt/selenium/chromedriver-$CHROME_DRIVER_VERSION /usr/bin/chromedriver
 
 RUN sudo mkdir /opt/proxy \
-	&& sudo chown seluser:seluser /opt/proxy \
-	&& cd /opt/proxy \
-	&& npm install http-proxy
+  && sudo chown seluser:seluser /opt/proxy \
+  && cd /opt/proxy \
+  && npm install http-proxy
 
 COPY proxy.js /opt/proxy/proxy.js
 
